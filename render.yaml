@@ -1,0 +1,25 @@
+databases:
+  - name: church-roster-db
+    plan: free
+
+services:
+  - type: web
+    name: church-roster
+    runtime: python
+    plan: free
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn roster.wsgi:application"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: church-roster-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: PYTHON_VERSION
+        value: "3.12.5"
+      # Set these yourself after the SMTP provider is set up:
+      # EMAIL_HOST, EMAIL_PORT, EMAIL_HOST_USER, EMAIL_HOST_PASSWORD,
+      # DEFAULT_FROM_EMAIL, SITE_URL

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<body style="font-family: -apple-system, Arial, sans-serif; color: #222;">
+    <p>Hi {{ assignment.volunteer.name }},</p>
+
+    <p>You've been scheduled for the following:</p>
+
+    <p>
+        <strong>Role:</strong> {{ assignment.role }}<br>
+        <strong>Date:</strong> {{ assignment.service_week }}
+    </p>
+
+    <p>Please confirm whether you're able to serve:</p>
+
+    <p>
+        <a href="{{ respond_url }}"
+           style="background:#1e7e34;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;display:inline-block;">
+           Confirm availability
+        </a>
+    </p>
+
+    <p>Thanks for serving!</p>
+</body>
+</html>

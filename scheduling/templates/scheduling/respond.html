@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirm your availability</title>
+    <style>
+        body { font-family: -apple-system, Arial, sans-serif; background: #f5f5f5; margin: 0; padding: 24px; }
+        .card { max-width: 480px; margin: 40px auto; background: #fff; border-radius: 12px; padding: 32px;
+                box-shadow: 0 1px 4px rgba(0,0,0,0.1); text-align: center; }
+        h1 { font-size: 1.3em; margin-bottom: 8px; }
+        .detail { color: #555; margin-bottom: 24px; }
+        .status { display: inline-block; padding: 6px 16px; border-radius: 999px; font-weight: 600; margin-bottom: 16px; }
+        .status.approved { background: #e6f4ea; color: #1e7e34; }
+        .status.declined { background: #fdecea; color: #b3261e; }
+        .status.pending { background: #fff4e5; color: #a15c00; }
+        .buttons { display: flex; gap: 12px; justify-content: center; margin-top: 16px; }
+        button { padding: 12px 24px; border: none; border-radius: 8px; font-size: 1em; cursor: pointer; }
+        .approve { background: #1e7e34; color: #fff; }
+        .decline { background: #b3261e; color: #fff; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>{{ assignment.role }}</h1>
+        <p class="detail">{{ assignment.service_week }}</p>
+
+        <p><span class="status {{ assignment.status }}">{{ assignment.get_status_display }}</span></p>
+
+        {% if assignment.status == "pending" %}
+            <p>Are you able to serve this week?</p>
+            <form method="post" class="buttons">
+                {% csrf_token %}
+                <button type="submit" name="action" value="approve" class="approve">Yes, I'll be there</button>
+                <button type="submit" name="action" value="decline" class="decline">Sorry, can't make it</button>
+            </form>
+        {% else %}
+            <p>Thanks — your response has been recorded. You can close this page.</p>
+            <form method="post" class="buttons">
+                {% csrf_token %}
+                <button type="submit" name="action" value="approve" class="approve">Change to Yes</button>
+                <button type="submit" name="action" value="decline" class="decline">Change to No</button>
+            </form>
+        {% endif %}
+    </div>
+</body>
+</html>
