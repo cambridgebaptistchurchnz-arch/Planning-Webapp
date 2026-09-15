@@ -9,7 +9,8 @@ def send_assignment_email(assignment):
     approve/decline link, via the Resend API. Marks the assignment as
     notified on success."""
 
-    respond_url = f"{settings.SITE_URL}/respond/{assignment.token}/"
+    site_url = settings.SITE_URL.rstrip("/")
+    respond_url = f"{site_url}/respond/{assignment.token}/"
 
     context = {
         "assignment": assignment,
