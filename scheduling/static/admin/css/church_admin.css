@@ -1,0 +1,48 @@
+/*
+ * Retheme Django's admin using its built-in CSS custom properties,
+ * to match the Church Roster ticket design (ink / gold / sage / clay).
+ */
+:root {
+    --primary: #26344A;
+    --primary-fg: #fff;
+
+    --header-color: #FBF8F3;
+    --header-branding-color: #FBF8F3;
+    --header-bg: #26344A;
+    --header-link-color: #FBF8F3;
+
+    --breadcrumbs-fg: #FBF8F3;
+    --breadcrumbs-link-fg: #FBF8F3;
+    --breadcrumbs-bg: #38496399;
+
+    --link-fg: #8A6417;
+    --link-hover-color: #6E5012;
+    --link-selected-fg: #8A6417;
+
+    --hairline-color: #E4DED2;
+    --border-color: #E4DED2;
+
+    --button-bg: #4F7359;
+    --button-fg: #fff;
+    --button-hover-bg: #3E5A45;
+    --default-button-bg: #4F7359;
+    --default-button-hover-bg: #3E5A45;
+
+    --delete-button-bg: #A8402F;
+    --delete-button-hover-bg: #86331F;
+
+    --object-tools-bg: #B8862F;
+    --object-tools-hover-bg: #966D26;
+
+    --message-success-bg: #EAF1EC;
+    --message-error-bg: #F7E9E6;
+
+    --body-bg: #FBF8F3;
+    --darkened-bg: #F2EEE4;
+    --selected-bg: #F2EEE4;
+    --selected-row: #FCF6E8;
+}
+
+#branding h1 {
+    font-weight: 600;
+}
