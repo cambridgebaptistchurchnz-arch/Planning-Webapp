@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html>
-<body style="font-family: -apple-system, Arial, sans-serif; color: #222;">
-    <p>Hi {{ assignment.volunteer.name }},</p>
-
-    <p>You've been scheduled for the following:</p>
-
-    <p>
-        <strong>Role:</strong> {{ assignment.role }}<br>
-        <strong>Date:</strong> {{ assignment.service_week }}
-    </p>
-
-    <p>Please confirm whether you're able to serve:</p>
-
-    <p>
-        <a href="{{ respond_url }}"
-           style="background:#1e7e34;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;display:inline-block;">
-           Confirm availability
-        </a>
-    </p>
-
-    <p>Thanks for serving!</p>
+<body style="font-family: -apple-system, Arial, sans-serif; color: #26344A; background: #FBF8F3; margin: 0; padding: 32px 16px;">
+    <table role="presentation" width="100%" style="max-width: 480px; margin: 0 auto; background: #ffffff; border: 1px solid #E4DED2;" cellpadding="0" cellspacing="0">
+        <tr>
+            <td style="padding: 36px 32px;">
+                <p style="font-size: 13px; color: #8A8272; margin: 0 0 6px 0;">{{ assignment.service_week }}</p>
+                <h1 style="font-family: Georgia, serif; font-size: 24px; font-weight: 600; margin: 0 0 8px 0; color: #26344A;">{{ assignment.role }}</h1>
+                <div style="width: 40px; height: 3px; background: #B8862F; margin-bottom: 20px;"></div>
+ 
+                <p style="font-size: 15px; line-height: 1.5; margin: 0 0 8px 0;">Hi {{ assignment.volunteer.name }},</p>
+                <p style="font-size: 15px; line-height: 1.5; margin: 0 0 24px 0;">Please confirm whether you're able to make it:</p>
+ 
+                <a href="{{ respond_url }}"
+                   style="display: inline-block; background: #4F7359; color: #fff; padding: 13px 22px; border-radius: 3px; text-decoration: none; font-weight: 500; font-size: 15px;">
+                   Confirm availability
+                </a>
+ 
+                <p style="font-size: 13px; color: #8A8272; margin-top: 28px;">Thanks!</p>
+            </td>
+        </tr>
+    </table>
 </body>
 </html>

@@ -1,7 +1,12 @@
 from django.contrib import admin, messages
+import requests
 
 from .emailing import send_assignment_email
 from .models import Assignment, Role, ServiceWeek, Volunteer
+
+admin.site.site_header = "Church Roster"
+admin.site.site_title = "Church Roster"
+admin.site.index_title = "Volunteer Scheduling"
 
 
 @admin.register(Volunteer)
@@ -28,9 +33,20 @@ class ServiceWeekAdmin(admin.ModelAdmin):
 def send_selected_assignment_emails(modeladmin, request, queryset):
     sent = 0
     for assignment in queryset:
-        send_assignment_email(assignment)
-        sent += 1
-    messages.success(request, f"Sent {sent} email(s).")
+        try:
+            send_assignment_email(assignment)
+            sent += 1
+        except requests.exceptions.HTTPError as exc:
+            detail = exc.response.text if exc.response is not None else str(exc)
+            messages.error(
+                request,
+                f"Failed to email {assignment.volunteer.name}: {detail}",
+            )
+        except Exception as exc:  # noqa: BLE001 - surface any other failure to the admin UI
+            messages.error(request, f"Failed to email {assignment.volunteer.name}: {exc}")
+
+    if sent:
+        messages.success(request, f"Sent {sent} email(s).")
 
 
 send_selected_assignment_emails.short_description = "Email selected volunteers their assignment"

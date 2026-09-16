@@ -9,4 +9,4 @@ Please confirm whether you're able to serve by clicking the link below:
 
 {{ respond_url }}
 
-Thanks for serving!
+
