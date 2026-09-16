@@ -67,7 +67,7 @@ ROOT_URLCONF = "roster.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -131,11 +131,9 @@ STORAGES = {
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # ---------------------------------------------------------------------
-# Email
+# Email (sent via Resend's HTTP API, not SMTP -- Render's free tier
+# blocks outbound SMTP ports, so SMTP won't work there)
 # ---------------------------------------------------------------------
-# Works with any SMTP provider: Resend, SendGrid, Mailgun, Gmail app
-# password, etc. During local dev with no EMAIL_HOST set, emails just
-# print to the console instead of actually sending.
 
 RESEND_API_KEY = os.environ.get("RESEND_API_KEY")
 DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "onboarding@resend.dev")
@@ -144,12 +142,10 @@ DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "onboarding@resend.dev
 # e.g. https://church-roster.onrender.com
 SITE_URL = os.environ.get("SITE_URL", "http://127.0.0.1:8000")
 
-
-
 # ---------------------------------------------------------------------
 # Logging - make sure errors show up in Render's log viewer
 # ---------------------------------------------------------------------
- 
+
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
