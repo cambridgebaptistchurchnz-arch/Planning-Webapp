@@ -1,4 +1,5 @@
 from django.contrib import admin, messages
+from django.utils.html import format_html
 import requests
 
 from .emailing import send_assignment_email
@@ -60,7 +61,7 @@ class AssignmentAdmin(admin.ModelAdmin):
         "service_week",
         "role",
         "volunteer",
-        "status",
+        "status_badge",
         "notified_at",
         "responded_at",
     )
@@ -68,3 +69,11 @@ class AssignmentAdmin(admin.ModelAdmin):
     search_fields = ("volunteer__name", "role__name")
     autocomplete_fields = ("volunteer", "role", "service_week")
     actions = [send_selected_assignment_emails]
+
+    @admin.display(description="Status", ordering="status")
+    def status_badge(self, obj):
+        return format_html(
+            '<span class="status-badge status-badge--{}">{}</span>',
+            obj.status,
+            obj.get_status_display(),
+        )

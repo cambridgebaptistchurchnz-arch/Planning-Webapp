@@ -1,50 +1,362 @@
 /*
- * Retheme Django's admin using its built-in CSS custom properties,
- * to match the Church Roster ticket design (ink / gold / sage / clay).
- 
+ * Church Roster admin theme: clean sidebar-nav layout with a calm
+ * blue accent and status badges, in the spirit of modern scheduling
+ * SaaS tools (not a clone of any specific product's proprietary UI).
+ */
+
 :root {
-    --primary: #26344A;
-    --primary-fg: #fff;
-
-    --header-color: #FBF8F3;
-    --header-branding-color: #FBF8F3;
-    --header-bg: #26344A;
-    --header-link-color: #FBF8F3;
-
-    --breadcrumbs-fg: #FBF8F3;
-    --breadcrumbs-link-fg: #FBF8F3;
-    --breadcrumbs-bg: #38496399;
-
-    --link-fg: #8A6417;
-    --link-hover-color: #6E5012;
-    --link-selected-fg: #8A6417;
-
-    --hairline-color: #E4DED2;
-    --border-color: #E4DED2;
-
-    --button-bg: #4F7359;
-    --button-fg: #fff;
-    --button-hover-bg: #3E5A45;
-    --default-button-bg: #4F7359;
-    --default-button-hover-bg: #3E5A45;
-
-    --delete-button-bg: #A8402F;
-    --delete-button-hover-bg: #86331F;
-
-    --object-tools-bg: #B8862F;
-    --object-tools-hover-bg: #966D26;
-
-    --message-success-bg: #EAF1EC;
-    --message-error-bg: #F7E9E6;
-
-    --body-bg: #FBF8F3;
-    --darkened-bg: #F2EEE4;
-    --selected-bg: #F2EEE4;
-    --selected-row: #FCF6E8;
+    --ink: #1F2937;
+    --blue: #2D6CDF;
+    --blue-dark: #2354B0;
+    --sage: #2F9E6E;
+    --sage-bg: #E4F6ED;
+    --amber: #C9852A;
+    --amber-bg: #FBF0DE;
+    --clay: #D14343;
+    --clay-bg: #FBE7E7;
+    --paper: #F6F7F9;
+    --panel: #FFFFFF;
+    --line: #E4E7EC;
+    --text: #1F2937;
+    --text-quiet: #6B7280;
 }
 
-#branding h1 {
+body {
+    background: var(--paper);
+    color: var(--text);
+    font-family: 'Inter', -apple-system, "Segoe UI", Arial, sans-serif;
+}
+
+/* ---------- Header ---------- */
+
+#header {
+    background: var(--panel);
+    color: var(--text);
+    padding: 14px 28px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--line);
+}
+
+#branding h1, #branding h1 a:link, #branding h1 a:visited {
+    color: var(--ink);
+    font-weight: 700;
+    font-size: 1.15rem;
+}
+
+#user-tools {
+    font-size: 0.85rem;
+    color: var(--text-quiet);
+}
+
+#user-tools a {
+    color: var(--blue);
+    border-bottom: none;
+}
+
+/* ---------- Breadcrumbs ---------- */
+
+div.breadcrumbs {
+    background: var(--paper);
+    color: var(--text-quiet);
+    padding: 10px 28px;
+    font-size: 0.8rem;
+    border-bottom: 1px solid var(--line);
+}
+
+div.breadcrumbs a {
+    color: var(--blue);
+}
+
+/* ---------- Sidebar navigation (Django's built-in #nav-sidebar) ---------- */
+
+#nav-sidebar {
+    background: var(--panel);
+    border-right: 1px solid var(--line);
+}
+
+#nav-sidebar .module {
+    border: none;
+    box-shadow: none;
+}
+
+#nav-sidebar caption, #nav-sidebar caption a {
+    color: var(--text-quiet);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 600;
+    background: transparent;
+    padding: 14px 20px 6px;
+}
+
+#nav-sidebar table a {
+    color: var(--text);
+    padding: 8px 20px;
+    font-size: 0.88rem;
+}
+
+#nav-sidebar table a:hover {
+    background: var(--paper);
+    color: var(--blue);
+}
+
+#nav-sidebar table tr.current-model a,
+#nav-sidebar table tr.current-app a {
+    color: var(--blue);
     font-weight: 600;
 }
 
-*/
+/* ---------- Content area ---------- */
+
+#content {
+    padding: 24px 28px;
+}
+
+.module {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.module h2, .module caption, .inline-group h2 {
+    background: var(--panel);
+    color: var(--ink);
+    padding: 12px 16px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-bottom: 1px solid var(--line);
+    border-radius: 8px 8px 0 0;
+}
+
+/* ---------- Status badges (Assignment list) ---------- */
+
+.status-badge {
+    display: inline-block;
+    padding: 3px 12px;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 600;
+}
+
+.status-badge--pending {
+    background: var(--amber-bg);
+    color: var(--amber);
+}
+
+.status-badge--approved {
+    background: var(--sage-bg);
+    color: var(--sage);
+}
+
+.status-badge--declined {
+    background: var(--clay-bg);
+    color: var(--clay);
+}
+
+/* ---------- Buttons (general) ---------- */
+
+.button, input[type=submit], input[type=button], .submit-row input, a.button {
+    background: var(--blue);
+    color: #fff;
+    border-radius: 6px;
+    border: none;
+    padding: 8px 16px;
+    font-weight: 500;
+    font-size: 0.85rem;
+    text-transform: none;
+    letter-spacing: normal;
+}
+
+.button:hover, input[type=submit]:hover, input[type=button]:hover, a.button:hover {
+    background: var(--blue-dark);
+}
+
+.button.default, input[type=submit].default {
+    background: var(--blue);
+}
+.button.default:hover, input[type=submit].default:hover {
+    background: var(--blue-dark);
+}
+
+/* ---------- Submit row (Save / Delete on the change form) ---------- */
+
+.submit-row {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.submit-row input {
+    margin: 0;
+}
+
+.submit-row .deletelink-box {
+    margin-right: auto;
+}
+
+.submit-row .deletelink {
+    background: transparent;
+    color: var(--clay);
+    border: 1px solid var(--clay);
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.submit-row .deletelink:hover {
+    background: var(--clay);
+    color: #fff;
+}
+
+/* ---------- "Add" button (object-tools, top right of list pages) ---------- */
+
+.object-tools {
+    margin-top: 8px;
+}
+
+.object-tools a.addlink {
+    background: var(--blue);
+    color: #fff;
+    border-radius: 6px;
+    padding: 8px 14px;
+    font-weight: 500;
+    font-size: 0.8rem;
+}
+
+.object-tools a.addlink:hover {
+    background: var(--blue-dark);
+}
+
+/* ---------- Changelist table ---------- */
+
+#changelist-filter {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+}
+
+#changelist-filter h2 {
+    background: var(--panel);
+    color: var(--ink);
+    border-bottom: 1px solid var(--line);
+    border-radius: 8px 8px 0 0;
+}
+
+#changelist-filter li.selected a {
+    color: var(--blue);
+    font-weight: 600;
+}
+
+#result_list {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+#result_list thead th {
+    background: var(--panel);
+    border-bottom: 2px solid var(--line);
+}
+
+#result_list thead th a:link, #result_list thead th a:visited {
+    color: var(--text-quiet);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 600;
+}
+
+#result_list tbody tr {
+    background: var(--panel);
+}
+
+#result_list tbody tr:nth-child(even) {
+    background: #FAFBFC;
+}
+
+#result_list tbody tr:hover {
+    background: #F0F5FE;
+}
+
+#result_list tbody td, #result_list tbody th {
+    border-bottom: 1px solid var(--line);
+    padding: 10px 12px;
+}
+
+/* ---------- Action bar (select + Go button above the table) ---------- */
+
+.actions {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.actions select {
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 6px 8px;
+}
+
+.actions button.button {
+    background: var(--blue);
+}
+.actions button.button:hover {
+    background: var(--blue-dark);
+}
+
+/* ---------- Links ---------- */
+
+a:link, a:visited {
+    color: var(--blue);
+}
+a:hover {
+    color: var(--blue-dark);
+}
+
+/* ---------- Login page ---------- */
+
+body.login {
+    background: var(--paper);
+}
+
+.login #container {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.login .submit-row {
+    border: none;
+    background: transparent;
+    justify-content: center;
+    padding: 0;
+}
+
+.login .submit-row input {
+    width: 100%;
+}
+
+/* ---------- Messages ---------- */
+
+ul.messagelist li.success {
+    background: var(--sage-bg);
+    color: var(--sage);
+}
+ul.messagelist li.error {
+    background: var(--clay-bg);
+    color: var(--clay);
+}
