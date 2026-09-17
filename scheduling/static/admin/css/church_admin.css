@@ -2,7 +2,75 @@
  * Church Roster admin theme: clean sidebar-nav layout with a calm
  * blue accent and status badges, in the spirit of modern scheduling
  * SaaS tools (not a clone of any specific product's proprietary UI).
+ *
+ * This theme is light-only. Django's admin ships a light/dark toggle
+ * that uses its own CSS variables -- since we don't maintain a dark
+ * variant, we force those variables to our light values regardless
+ * of the toggle or OS preference, and hide the toggle button so it
+ * doesn't look like a broken option.
  */
+
+:root,
+html[data-theme="dark"],
+html[data-theme="light"] {
+    --primary: #2D6CDF;
+    --primary-fg: #fff;
+    --body-fg: #1F2937;
+    --body-bg: #F6F7F9;
+    --body-quiet-color: #6B7280;
+    --body-loud-color: #1F2937;
+    --header-color: #1F2937;
+    --header-branding-color: #1F2937;
+    --header-bg: #FFFFFF;
+    --header-link-color: #2D6CDF;
+    --breadcrumbs-fg: #6B7280;
+    --breadcrumbs-link-fg: #2D6CDF;
+    --breadcrumbs-bg: #F6F7F9;
+    --link-fg: #2D6CDF;
+    --link-hover-color: #2354B0;
+    --link-selected-fg: #2D6CDF;
+    --hairline-color: #E4E7EC;
+    --border-color: #E4E7EC;
+    --error-fg: #D14343;
+    --message-success-bg: #E4F6ED;
+    --message-warning-bg: #FBF0DE;
+    --message-error-bg: #FBE7E7;
+    --darkened-bg: #F6F7F9;
+    --selected-bg: #F0F5FE;
+    --selected-row: #F0F5FE;
+    --button-fg: #fff;
+    --button-bg: #2D6CDF;
+    --button-hover-bg: #2354B0;
+    --default-button-bg: #2D6CDF;
+    --default-button-hover-bg: #2354B0;
+    --close-button-bg: #6B7280;
+    --close-button-hover-bg: #4B5563;
+    --delete-button-bg: #D14343;
+    --delete-button-hover-bg: #B23636;
+}
+
+/* Neutralise the OS-level dark mode preference too */
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        --primary: #2D6CDF;
+        --primary-fg: #fff;
+        --body-fg: #1F2937;
+        --body-bg: #F6F7F9;
+        --header-bg: #FFFFFF;
+        --header-color: #1F2937;
+        --header-branding-color: #1F2937;
+        --link-fg: #2D6CDF;
+        --hairline-color: #E4E7EC;
+        --border-color: #E4E7EC;
+        --darkened-bg: #F6F7F9;
+        --selected-bg: #F0F5FE;
+    }
+}
+
+/* Hide the light/dark/auto toggle button -- it has nothing to switch to */
+.theme-toggle, #theme-toggle {
+    display: none !important;
+}
 
 :root {
     --ink: #1F2937;
