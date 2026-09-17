@@ -428,3 +428,44 @@ ul.messagelist li.error {
     background: var(--clay-bg);
     color: var(--clay);
 }
+
+/* ---------- Home screen: colorful card grid (replaces plain app list) ---------- */
+
+.church-roster-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
+    margin-top: 8px;
+}
+
+.church-roster-card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 20px;
+    border-top: 4px solid var(--blue);
+}
+
+.church-roster-card--sage { border-top-color: var(--sage); }
+.church-roster-card--amber { border-top-color: var(--amber); }
+.church-roster-card--clay { border-top-color: var(--clay); }
+
+.church-roster-card h2 {
+    background: none;
+    color: var(--ink);
+    padding: 0;
+    margin: 0 0 12px 0;
+    font-size: 1.05rem;
+    border-radius: 0;
+    border-bottom: none;
+}
+
+.church-roster-card__links {
+    display: flex;
+    gap: 14px;
+}
+
+.church-roster-card__links a {
+    font-size: 0.85rem;
+    font-weight: 500;
+}

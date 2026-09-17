@@ -3,11 +3,18 @@ from django.utils.html import format_html
 import requests
 
 from .emailing import send_assignment_email
-from .models import Assignment, Role, ServiceWeek, Volunteer
+from .models import Assignment, Role, ServiceItem, ServiceWeek, Volunteer
 
 admin.site.site_header = "Church Roster"
 admin.site.site_title = "Church Roster"
 admin.site.index_title = "Volunteer Scheduling"
+
+
+class ServiceItemInline(admin.TabularInline):
+    model = ServiceItem
+    extra = 1
+    fields = ("order", "item_type", "title", "duration_minutes", "notes")
+    ordering = ("order",)
 
 
 @admin.register(Volunteer)
@@ -25,10 +32,15 @@ class RoleAdmin(admin.ModelAdmin):
 
 @admin.register(ServiceWeek)
 class ServiceWeekAdmin(admin.ModelAdmin):
-    list_display = ("date", "label")
+    list_display = ("date", "label", "item_count")
     list_filter = ("date",)
     ordering = ("-date",)
     search_fields = ("label",)
+    inlines = [ServiceItemInline]
+
+    @admin.display(description="Order of service items")
+    def item_count(self, obj):
+        return obj.order_of_service.count()
 
 
 def send_selected_assignment_emails(modeladmin, request, queryset):

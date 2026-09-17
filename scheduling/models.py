@@ -66,3 +66,28 @@ class Assignment(models.Model):
 
     def __str__(self):
         return f"{self.volunteer} — {self.role} ({self.service_week})"
+
+
+class ServiceItem(models.Model):
+    class ItemType(models.TextChoices):
+        SONG = "song", "Song"
+        READING = "reading", "Scripture Reading"
+        SERMON = "sermon", "Sermon"
+        PRAYER = "prayer", "Prayer"
+        ANNOUNCEMENT = "announcement", "Announcement"
+        OFFERING = "offering", "Offering"
+        COMMUNION = "communion", "Communion"
+        OTHER = "other", "Other"
+
+    service_week = models.ForeignKey(ServiceWeek, on_delete=models.CASCADE, related_name="order_of_service")
+    order = models.PositiveIntegerField(default=0, help_text="Lower numbers appear first.")
+    item_type = models.CharField(max_length=20, choices=ItemType.choices, default=ItemType.OTHER)
+    title = models.CharField(max_length=200, help_text="e.g. song title, sermon topic, announcement subject.")
+    duration_minutes = models.PositiveIntegerField(null=True, blank=True)
+    notes = models.TextField(blank=True, help_text="Lyrics reference, speaker name, key, anything the team needs.")
+
+    class Meta:
+        ordering = ["service_week", "order"]
+
+    def __str__(self):
+        return f"{self.get_item_type_display()}: {self.title}"
