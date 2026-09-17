@@ -1,4 +1,6 @@
 from django.contrib import admin, messages
+from django.shortcuts import get_object_or_404, render
+from django.urls import path, reverse
 from django.utils.html import format_html
 import requests
 
@@ -32,7 +34,7 @@ class RoleAdmin(admin.ModelAdmin):
 
 @admin.register(ServiceWeek)
 class ServiceWeekAdmin(admin.ModelAdmin):
-    list_display = ("date", "label", "item_count")
+    list_display = ("date", "label", "item_count", "print_link")
     list_filter = ("date",)
     ordering = ("-date",)
     search_fields = ("label",)
@@ -41,6 +43,35 @@ class ServiceWeekAdmin(admin.ModelAdmin):
     @admin.display(description="Order of service items")
     def item_count(self, obj):
         return obj.order_of_service.count()
+
+    @admin.display(description="Print")
+    def print_link(self, obj):
+        url = reverse("admin:scheduling_serviceweek_print", args=[obj.pk])
+        return format_html('<a href="{}" target="_blank">Print run sheet</a>', url)
+
+    def get_urls(self):
+        custom_urls = [
+            path(
+                "<int:pk>/print/",
+                self.admin_site.admin_view(self.print_view),
+                name="scheduling_serviceweek_print",
+            ),
+        ]
+        return custom_urls + super().get_urls()
+
+    def print_view(self, request, pk):
+        service_week = get_object_or_404(ServiceWeek, pk=pk)
+        items = service_week.order_of_service.all().order_by("order")
+        assignments = service_week.assignments.select_related("role", "volunteer").order_by("role__name")
+        return render(
+            request,
+            "scheduling/print_run_sheet.html",
+            {
+                "service_week": service_week,
+                "items": items,
+                "assignments": assignments,
+            },
+        )
 
 
 def send_selected_assignment_emails(modeladmin, request, queryset):

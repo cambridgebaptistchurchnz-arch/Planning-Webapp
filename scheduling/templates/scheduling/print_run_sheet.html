@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Run Sheet — {{ service_week }}</title>
+    <style>
+        body {
+            font-family: Georgia, 'Times New Roman', serif;
+            color: #1a1a1a;
+            max-width: 720px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        h1 {
+            font-size: 1.6rem;
+            margin-bottom: 2px;
+        }
+
+        .subtitle {
+            color: #555;
+            margin-top: 0;
+            margin-bottom: 28px;
+            font-family: Arial, sans-serif;
+            font-size: 0.95rem;
+        }
+
+        h2 {
+            font-family: Arial, sans-serif;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #444;
+            border-bottom: 2px solid #222;
+            padding-bottom: 6px;
+            margin-top: 32px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: Arial, sans-serif;
+            font-size: 0.92rem;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 8px 6px;
+            border-bottom: 1px solid #ddd;
+            vertical-align: top;
+        }
+
+        th {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: #666;
+        }
+
+        .empty {
+            color: #888;
+            font-style: italic;
+            font-family: Arial, sans-serif;
+            font-size: 0.9rem;
+            padding: 10px 0;
+        }
+
+        .print-button {
+            font-family: Arial, sans-serif;
+            background: #2D6CDF;
+            color: #fff;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        @media print {
+            .no-print { display: none; }
+            body { margin: 0; }
+        }
+    </style>
+</head>
+<body>
+    <button class="print-button no-print" onclick="window.print()">Print this page</button>
+
+    <h1>Order of Service</h1>
+    <p class="subtitle">{{ service_week }}</p>
+
+    <h2>Program</h2>
+    {% if items %}
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 40px;">#</th>
+                <th>Item</th>
+                <th style="width: 90px;">Duration</th>
+                <th>Notes</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td>{{ item.order }}</td>
+                <td><strong>{{ item.get_item_type_display }}</strong>: {{ item.title }}</td>
+                <td>{% if item.duration_minutes %}{{ item.duration_minutes }} min{% endif %}</td>
+                <td>{{ item.notes }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <p class="empty">No order of service items added yet.</p>
+    {% endif %}
+
+    <h2>Serving This Week</h2>
+    {% if assignments %}
+    <table>
+        <thead>
+            <tr>
+                <th>Role</th>
+                <th>Volunteer</th>
+                <th style="width: 100px;">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for assignment in assignments %}
+            <tr>
+                <td>{{ assignment.role }}</td>
+                <td>{{ assignment.volunteer.name }}</td>
+                <td>{{ assignment.get_status_display }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <p class="empty">No volunteers assigned yet.</p>
+    {% endif %}
+</body>
+</html>
