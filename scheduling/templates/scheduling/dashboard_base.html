@@ -187,6 +187,23 @@
 
         textarea { min-width: 180px; }
 
+        input[type="checkbox"] {
+            width: auto;
+            padding: 0;
+            border: none;
+            margin-right: 6px;
+        }
+
+        .checkbox-list ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .checkbox-list li {
+            padding: 4px 0;
+        }
+
         /* ---------- Buttons ---------- */
 
         button, .btn {
@@ -235,6 +252,7 @@
         }
         .messages li.success { background: var(--sage-bg); color: var(--sage); }
         .messages li.error { background: var(--clay-bg); color: var(--clay); }
+        .messages li.info { background: var(--amber-bg); color: var(--amber); }
 
         .empty {
             color: var(--text-quiet);

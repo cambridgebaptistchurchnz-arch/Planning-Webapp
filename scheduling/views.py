@@ -8,7 +8,7 @@ from django.utils import timezone
 import requests
 
 from .emailing import send_assignment_email
-from .forms import AssignmentForm, RoleForm, ServiceItemForm, ServiceWeekForm, StaffUserForm, VolunteerForm
+from .forms import RoleForm, ServiceItemForm, ServiceWeekForm, StaffUserForm, VolunteerForm
 from .models import Assignment, Role, ServiceWeek, Volunteer
 
 User = get_user_model()
@@ -58,20 +58,27 @@ def service_week_detail(request, pk):
                 messages.success(request, f"Added {item.title} to the order of service.")
             return redirect("service_week_detail", pk=pk)
 
-        if "add_assignment" in request.POST:
-            assignment_form = AssignmentForm(request.POST)
-            if assignment_form.is_valid():
-                assignment = assignment_form.save(commit=False)
-                assignment.service_week = week
-                assignment.save()
-                messages.success(request, f"Assigned {assignment.volunteer} to {assignment.role}.")
+        if "assign_volunteer" in request.POST:
+            role = get_object_or_404(Role, pk=request.POST.get("role_id"))
+            volunteer = get_object_or_404(Volunteer, pk=request.POST.get("volunteer_id"))
+            assignment, created = Assignment.objects.get_or_create(
+                service_week=week, role=role, volunteer=volunteer
+            )
+            if created:
+                messages.success(request, f"Assigned {volunteer} to {role}.")
+            else:
+                messages.info(request, f"{volunteer} is already assigned to {role} this week.")
             return redirect("service_week_detail", pk=pk)
 
     items = week.order_of_service.all().order_by("order")
     assignments = week.assignments.select_related("role", "volunteer").order_by("role__name")
 
     item_form = ServiceItemForm()
-    assignment_form = AssignmentForm()
+
+    roles_with_eligible = [
+        (role, role.volunteers.filter(active=True).order_by("name"))
+        for role in Role.objects.all().order_by("name")
+    ]
 
     return render(
         request,
@@ -81,7 +88,7 @@ def service_week_detail(request, pk):
             "items": items,
             "assignments": assignments,
             "item_form": item_form,
-            "assignment_form": assignment_form,
+            "roles_with_eligible": roles_with_eligible,
         },
     )
 

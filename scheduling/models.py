@@ -11,6 +11,12 @@ class Volunteer(models.Model):
         default=True,
         help_text="Untick to hide this person from future scheduling without deleting their history.",
     )
+    roles = models.ManyToManyField(
+        "Role",
+        blank=True,
+        related_name="volunteers",
+        help_text="Which roles this person can be scheduled for.",
+    )
 
     class Meta:
         ordering = ["name"]

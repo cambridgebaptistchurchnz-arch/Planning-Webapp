@@ -24,6 +24,12 @@
         <div class="field" style="margin-bottom: 18px;">
             <label>{{ form.active }} Active (uncheck to hide from scheduling without deleting)</label>
         </div>
+        <div class="field" style="margin-bottom: 18px;">
+            <label>Eligible roles</label>
+            <div class="checkbox-list">
+                {{ form.roles }}
+            </div>
+        </div>
         <button type="submit" class="btn-primary">Save</button>
     </form>
 </div>

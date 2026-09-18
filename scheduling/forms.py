@@ -30,7 +30,10 @@ class AssignmentForm(forms.ModelForm):
 class VolunteerForm(forms.ModelForm):
     class Meta:
         model = Volunteer
-        fields = ["name", "email", "phone", "active"]
+        fields = ["name", "email", "phone", "active", "roles"]
+        widgets = {
+            "roles": forms.CheckboxSelectMultiple,
+        }
 
 
 class RoleForm(forms.ModelForm):
