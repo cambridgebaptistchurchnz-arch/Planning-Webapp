@@ -1,0 +1,53 @@
+{% extends "scheduling/dashboard_base.html" %}
+
+{% block nav_dashboard %}active{% endblock %}
+
+{% block content %}
+<h2>Service Weeks</h2>
+<p class="page-subtitle">Plan the order of service and volunteer schedule for each week.</p>
+
+<div class="panel">
+    <h3>Add a new week</h3>
+    <form method="post" class="inline-form">
+        {% csrf_token %}
+        <div class="field">
+            <label for="{{ form.date.id_for_label }}">Date</label>
+            {{ form.date }}
+        </div>
+        <div class="field">
+            <label for="{{ form.label.id_for_label }}">Label (optional)</label>
+            {{ form.label }}
+        </div>
+        <button type="submit" class="btn-primary">Add Week</button>
+    </form>
+    {% if form.errors %}
+        <p style="color: var(--clay); margin-top: 10px;">Please check the date — it may already exist for that label.</p>
+    {% endif %}
+</div>
+
+<div class="panel">
+    <h3>All weeks</h3>
+    {% if weeks %}
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Label</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for week in weeks %}
+            <tr>
+                <td>{{ week.date }}</td>
+                <td>{{ week.label|default:"—" }}</td>
+                <td><a href="{% url 'service_week_detail' week.pk %}" class="btn btn-secondary btn-small">Open</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <p class="empty">No service weeks yet — add one above.</p>
+    {% endif %}
+</div>
+{% endblock %}
