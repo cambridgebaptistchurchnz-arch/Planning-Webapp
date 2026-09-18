@@ -1,0 +1,47 @@
+{% extends "scheduling/dashboard_base.html" %}
+
+{% block nav_users %}active{% endblock %}
+
+{% block content %}
+<h2>Logins</h2>
+<p class="page-subtitle">
+    Who can sign in to manage the schedule. <a href="{% url 'user_add' %}">+ Add a login</a>
+</p>
+
+<div class="panel">
+    {% if users %}
+    <table>
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Staff access</th>
+                <th>Active</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for staff_user in users %}
+            <tr>
+                <td>{{ staff_user.username }}{% if staff_user.is_superuser %} (superuser){% endif %}</td>
+                <td>{{ staff_user.email|default:"" }}</td>
+                <td>{% if staff_user.is_staff %}Yes{% else %}No{% endif %}</td>
+                <td>{% if staff_user.is_active %}Yes{% else %}No{% endif %}</td>
+                <td>
+                    <a href="{% url 'user_edit' staff_user.pk %}" class="btn btn-secondary btn-small">Edit</a>
+                    {% if staff_user.pk != user.pk %}
+                    <form method="post" action="{% url 'user_delete' staff_user.pk %}" style="display:inline;" onsubmit="return confirm('Remove login for {{ staff_user.username }}?');">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-danger">Remove</button>
+                    </form>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <p class="empty">No logins yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends "scheduling/dashboard_base.html" %}
+
+{% block nav_users %}active{% endblock %}
+
+{% block content %}
+<h2>{% if staff_user %}Edit Login{% else %}Add Login{% endif %}</h2>
+<p class="page-subtitle"><a href="{% url 'user_list' %}">&larr; All logins</a></p>
+
+<div class="panel">
+    <form method="post">
+        {% csrf_token %}
+        <div class="field" style="margin-bottom: 14px;">
+            <label>Username</label><br>
+            {{ form.username }}
+            {% if form.username.errors %}<p style="color: var(--clay); font-size: 0.85rem;">{{ form.username.errors|join:", " }}</p>{% endif %}
+        </div>
+        <div class="field" style="margin-bottom: 14px;">
+            <label>Email</label><br>
+            {{ form.email }}
+        </div>
+        <div class="field" style="margin-bottom: 14px;">
+            <label>Password {% if staff_user %}(leave blank to keep current){% endif %}</label><br>
+            {{ form.password }}
+            {% if form.password.errors %}<p style="color: var(--clay); font-size: 0.85rem;">{{ form.password.errors|join:", " }}</p>{% endif %}
+        </div>
+        <div class="field" style="margin-bottom: 10px;">
+            <label>{{ form.is_staff }} Can access this dashboard</label>
+        </div>
+        <div class="field" style="margin-bottom: 18px;">
+            <label>{{ form.is_active }} Active (uncheck to disable this login without deleting it)</label>
+        </div>
+        <button type="submit" class="btn-primary">Save</button>
+    </form>
+</div>
+{% endblock %}

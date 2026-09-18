@@ -1,3 +1,4 @@
+from django.contrib.auth.views import LogoutView
 from django.urls import path
 
 from . import views
@@ -26,4 +27,9 @@ urlpatterns = [
     path("roles/new/", views.role_edit, name="role_add"),
     path("roles/<int:pk>/edit/", views.role_edit, name="role_edit"),
     path("roles/<int:pk>/delete/", views.role_delete, name="role_delete"),
+    path("users/", views.user_list, name="user_list"),
+    path("users/new/", views.user_edit, name="user_add"),
+    path("users/<int:pk>/edit/", views.user_edit, name="user_edit"),
+    path("users/<int:pk>/delete/", views.user_delete, name="user_delete"),
+    path("logout/", LogoutView.as_view(next_page="/admin/login/"), name="logout"),
 ]

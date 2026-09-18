@@ -47,6 +47,9 @@
             color: var(--paper);
             padding: 28px 0;
             flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
         .sidebar h1 {
@@ -67,6 +70,32 @@
         .sidebar nav a:hover, .sidebar nav a.active {
             background: rgba(251, 248, 243, 0.08);
             color: #fff;
+        }
+
+        .sidebar-footer {
+            padding: 16px 24px 0;
+            border-top: 1px solid rgba(251, 248, 243, 0.15);
+            margin-top: 16px;
+        }
+
+        .sidebar-user {
+            font-size: 0.8rem;
+            color: rgba(251, 248, 243, 0.6);
+            margin: 0 0 8px 0;
+        }
+
+        .sidebar-logout {
+            background: transparent;
+            border: 1px solid rgba(251, 248, 243, 0.3);
+            color: var(--paper);
+            font-size: 0.8rem;
+            padding: 6px 14px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .sidebar-logout:hover {
+            background: rgba(251, 248, 243, 0.1);
         }
 
         /* ---------- Main content ---------- */
@@ -222,7 +251,17 @@
             <a href="{% url 'dashboard' %}" class="{% block nav_dashboard %}{% endblock %}">Service Weeks</a>
             <a href="{% url 'volunteer_list' %}" class="{% block nav_volunteers %}{% endblock %}">Volunteers</a>
             <a href="{% url 'role_list' %}" class="{% block nav_roles %}{% endblock %}">Roles</a>
+            {% if user.is_superuser %}
+            <a href="{% url 'user_list' %}" class="{% block nav_users %}{% endblock %}">Logins</a>
+            {% endif %}
         </nav>
+        <div class="sidebar-footer">
+            <p class="sidebar-user">{{ user.username }}</p>
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="sidebar-logout">Log out</button>
+            </form>
+        </div>
     </div>
     <div class="main">
         {% if messages %}

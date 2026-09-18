@@ -1,6 +1,9 @@
 from django import forms
+from django.contrib.auth import get_user_model
 
 from .models import Assignment, Role, ServiceItem, ServiceWeek, Volunteer
+
+User = get_user_model()
 
 
 class ServiceWeekForm(forms.ModelForm):
@@ -34,3 +37,15 @@ class RoleForm(forms.ModelForm):
     class Meta:
         model = Role
         fields = ["name", "description"]
+
+
+class StaffUserForm(forms.ModelForm):
+    password = forms.CharField(
+        widget=forms.PasswordInput,
+        required=False,
+        help_text="Leave blank to keep the current password. Required when creating a new login.",
+    )
+
+    class Meta:
+        model = User
+        fields = ["username", "email", "is_staff", "is_active"]

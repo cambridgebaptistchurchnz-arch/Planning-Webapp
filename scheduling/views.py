@@ -1,13 +1,17 @@
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth import get_user_model
+from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
 import requests
 
 from .emailing import send_assignment_email
-from .forms import AssignmentForm, RoleForm, ServiceItemForm, ServiceWeekForm, VolunteerForm
+from .forms import AssignmentForm, RoleForm, ServiceItemForm, ServiceWeekForm, StaffUserForm, VolunteerForm
 from .models import Assignment, Role, ServiceWeek, Volunteer
+
+User = get_user_model()
 
 
 def respond_to_assignment(request, token):
@@ -188,3 +192,52 @@ def role_delete(request, pk):
     role.delete()
     messages.success(request, "Removed role.")
     return redirect("role_list")
+
+
+@staff_member_required
+def user_list(request):
+    if not request.user.is_superuser:
+        return HttpResponseForbidden("You don't have permission to manage logins.")
+    users = User.objects.all().order_by("username")
+    return render(request, "scheduling/user_list.html", {"users": users})
+
+
+@staff_member_required
+def user_edit(request, pk=None):
+    if not request.user.is_superuser:
+        return HttpResponseForbidden("You don't have permission to manage logins.")
+
+    staff_user = get_object_or_404(User, pk=pk) if pk else None
+
+    if request.method == "POST":
+        form = StaffUserForm(request.POST, instance=staff_user)
+        if form.is_valid():
+            password = form.cleaned_data.get("password")
+            if not staff_user and not password:
+                form.add_error("password", "A password is required for a new login.")
+            else:
+                user_obj = form.save(commit=False)
+                if password:
+                    user_obj.set_password(password)
+                user_obj.save()
+                messages.success(request, "Saved login.")
+                return redirect("user_list")
+    else:
+        form = StaffUserForm(instance=staff_user)
+
+    return render(request, "scheduling/user_form.html", {"form": form, "staff_user": staff_user})
+
+
+@staff_member_required
+def user_delete(request, pk):
+    if not request.user.is_superuser:
+        return HttpResponseForbidden("You don't have permission to manage logins.")
+
+    staff_user = get_object_or_404(User, pk=pk)
+    if staff_user.pk == request.user.pk:
+        messages.error(request, "You can't remove your own login while logged in as it.")
+        return redirect("user_list")
+
+    staff_user.delete()
+    messages.success(request, "Removed login.")
+    return redirect("user_list")
