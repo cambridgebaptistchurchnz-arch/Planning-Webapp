@@ -31,5 +31,5 @@ urlpatterns = [
     path("users/new/", views.user_edit, name="user_add"),
     path("users/<int:pk>/edit/", views.user_edit, name="user_edit"),
     path("users/<int:pk>/delete/", views.user_delete, name="user_delete"),
-    path("logout/", LogoutView.as_view(next_page="/admin/login/"), name="logout"),
+    path("logout/", LogoutView.as_view(next_page="/admin/login/?next=/dashboard/"),name="logout"),
 ]
