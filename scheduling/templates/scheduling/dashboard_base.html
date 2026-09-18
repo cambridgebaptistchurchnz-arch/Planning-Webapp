@@ -220,9 +220,8 @@
         <h1>Church Roster</h1>
         <nav>
             <a href="{% url 'dashboard' %}" class="{% block nav_dashboard %}{% endblock %}">Service Weeks</a>
-            <a href="/admin/scheduling/volunteer/">Volunteers</a>
-            <a href="/admin/scheduling/role/">Roles</a>
-            <a href="/admin/">Full Admin</a>
+            <a href="{% url 'volunteer_list' %}" class="{% block nav_volunteers %}{% endblock %}">Volunteers</a>
+            <a href="{% url 'role_list' %}" class="{% block nav_roles %}{% endblock %}">Roles</a>
         </nav>
     </div>
     <div class="main">

@@ -18,4 +18,12 @@ urlpatterns = [
         name="email_assignment",
     ),
     path("dashboard/week/<int:pk>/email-all/", views.email_all_pending, name="email_all_pending"),
+    path("volunteers/", views.volunteer_list, name="volunteer_list"),
+    path("volunteers/new/", views.volunteer_edit, name="volunteer_add"),
+    path("volunteers/<int:pk>/edit/", views.volunteer_edit, name="volunteer_edit"),
+    path("volunteers/<int:pk>/delete/", views.volunteer_delete, name="volunteer_delete"),
+    path("roles/", views.role_list, name="role_list"),
+    path("roles/new/", views.role_edit, name="role_add"),
+    path("roles/<int:pk>/edit/", views.role_edit, name="role_edit"),
+    path("roles/<int:pk>/delete/", views.role_delete, name="role_delete"),
 ]

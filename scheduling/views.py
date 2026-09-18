@@ -6,8 +6,8 @@ from django.utils import timezone
 import requests
 
 from .emailing import send_assignment_email
-from .forms import AssignmentForm, ServiceItemForm, ServiceWeekForm
-from .models import Assignment, ServiceWeek
+from .forms import AssignmentForm, RoleForm, ServiceItemForm, ServiceWeekForm, VolunteerForm
+from .models import Assignment, Role, ServiceWeek, Volunteer
 
 
 def respond_to_assignment(request, token):
@@ -132,3 +132,59 @@ def week_items_qs(pk):
     from .models import ServiceItem
 
     return ServiceItem.objects.filter(service_week_id=pk)
+
+
+@staff_member_required
+def volunteer_list(request):
+    volunteers = Volunteer.objects.all().order_by("name")
+    return render(request, "scheduling/volunteer_list.html", {"volunteers": volunteers})
+
+
+@staff_member_required
+def volunteer_edit(request, pk=None):
+    volunteer = get_object_or_404(Volunteer, pk=pk) if pk else None
+    if request.method == "POST":
+        form = VolunteerForm(request.POST, instance=volunteer)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Saved volunteer.")
+            return redirect("volunteer_list")
+    else:
+        form = VolunteerForm(instance=volunteer)
+    return render(request, "scheduling/volunteer_form.html", {"form": form, "volunteer": volunteer})
+
+
+@staff_member_required
+def volunteer_delete(request, pk):
+    volunteer = get_object_or_404(Volunteer, pk=pk)
+    volunteer.delete()
+    messages.success(request, "Removed volunteer.")
+    return redirect("volunteer_list")
+
+
+@staff_member_required
+def role_list(request):
+    roles = Role.objects.all().order_by("name")
+    return render(request, "scheduling/role_list.html", {"roles": roles})
+
+
+@staff_member_required
+def role_edit(request, pk=None):
+    role = get_object_or_404(Role, pk=pk) if pk else None
+    if request.method == "POST":
+        form = RoleForm(request.POST, instance=role)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Saved role.")
+            return redirect("role_list")
+    else:
+        form = RoleForm(instance=role)
+    return render(request, "scheduling/role_form.html", {"form": form, "role": role})
+
+
+@staff_member_required
+def role_delete(request, pk):
+    role = get_object_or_404(Role, pk=pk)
+    role.delete()
+    messages.success(request, "Removed role.")
+    return redirect("role_list")

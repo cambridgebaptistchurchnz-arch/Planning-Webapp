@@ -1,0 +1,23 @@
+{% extends "scheduling/dashboard_base.html" %}
+
+{% block nav_roles %}active{% endblock %}
+
+{% block content %}
+<h2>{% if role %}Edit Role{% else %}Add Role{% endif %}</h2>
+<p class="page-subtitle"><a href="{% url 'role_list' %}">&larr; All roles</a></p>
+
+<div class="panel">
+    <form method="post">
+        {% csrf_token %}
+        <div class="field" style="margin-bottom: 14px;">
+            <label>Name</label><br>
+            {{ form.name }}
+        </div>
+        <div class="field" style="margin-bottom: 18px;">
+            <label>Description (optional)</label><br>
+            {{ form.description }}
+        </div>
+        <button type="submit" class="btn-primary">Save</button>
+    </form>
+</div>
+{% endblock %}

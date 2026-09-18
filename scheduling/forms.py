@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Assignment, ServiceItem, ServiceWeek
+from .models import Assignment, Role, ServiceItem, ServiceWeek, Volunteer
 
 
 class ServiceWeekForm(forms.ModelForm):
@@ -22,3 +22,15 @@ class AssignmentForm(forms.ModelForm):
     class Meta:
         model = Assignment
         fields = ["role", "volunteer"]
+
+
+class VolunteerForm(forms.ModelForm):
+    class Meta:
+        model = Volunteer
+        fields = ["name", "email", "phone", "active"]
+
+
+class RoleForm(forms.ModelForm):
+    class Meta:
+        model = Role
+        fields = ["name", "description"]

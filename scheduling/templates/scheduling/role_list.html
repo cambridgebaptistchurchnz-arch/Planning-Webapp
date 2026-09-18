@@ -1,0 +1,41 @@
+{% extends "scheduling/dashboard_base.html" %}
+
+{% block nav_roles %}active{% endblock %}
+
+{% block content %}
+<h2>Roles</h2>
+<p class="page-subtitle">
+    The jobs volunteers get scheduled for. <a href="{% url 'role_add' %}">+ Add a role</a>
+</p>
+
+<div class="panel">
+    {% if roles %}
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for role in roles %}
+            <tr>
+                <td>{{ role.name }}</td>
+                <td>{{ role.description|default:"" }}</td>
+                <td>
+                    <a href="{% url 'role_edit' role.pk %}" class="btn btn-secondary btn-small">Edit</a>
+                    <form method="post" action="{% url 'role_delete' role.pk %}" style="display:inline;" onsubmit="return confirm('Remove {{ role.name }}?');">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-danger">Remove</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <p class="empty">No roles yet — add one above.</p>
+    {% endif %}
+</div>
+{% endblock %}

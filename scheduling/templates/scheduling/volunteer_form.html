@@ -1,0 +1,30 @@
+{% extends "scheduling/dashboard_base.html" %}
+
+{% block nav_volunteers %}active{% endblock %}
+
+{% block content %}
+<h2>{% if volunteer %}Edit Volunteer{% else %}Add Volunteer{% endif %}</h2>
+<p class="page-subtitle"><a href="{% url 'volunteer_list' %}">&larr; All volunteers</a></p>
+
+<div class="panel">
+    <form method="post">
+        {% csrf_token %}
+        <div class="field" style="margin-bottom: 14px;">
+            <label>Name</label><br>
+            {{ form.name }}
+        </div>
+        <div class="field" style="margin-bottom: 14px;">
+            <label>Email</label><br>
+            {{ form.email }}
+        </div>
+        <div class="field" style="margin-bottom: 14px;">
+            <label>Phone (optional)</label><br>
+            {{ form.phone }}
+        </div>
+        <div class="field" style="margin-bottom: 18px;">
+            <label>{{ form.active }} Active (uncheck to hide from scheduling without deleting)</label>
+        </div>
+        <button type="submit" class="btn-primary">Save</button>
+    </form>
+</div>
+{% endblock %}
