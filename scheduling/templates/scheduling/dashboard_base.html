@@ -260,6 +260,56 @@
             font-size: 0.9rem;
             padding: 8px 0;
         }
+
+        /* ---------- Drag and drop (order of service) ---------- */
+
+        .drag-handle {
+            cursor: grab;
+            color: var(--text-quiet);
+            width: 24px;
+            text-align: center;
+        }
+
+        #order-of-service-list tr.sortable-ghost {
+            opacity: 0.4;
+            background: var(--paper);
+        }
+
+        /* ---------- Assign row (per-role assignment) ---------- */
+
+        .assign-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .assign-row:last-child {
+            border-bottom: none;
+        }
+
+        .assign-row-label {
+            min-width: 160px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .assign-row-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .assign-row-actions button[disabled] {
+            opacity: 0.6;
+            cursor: default;
+        }
+
+        .assign-row-form {
+            margin-top: 0 !important;
+        }
     </style>
 </head>
 <body>

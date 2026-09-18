@@ -7,6 +7,7 @@ urlpatterns = [
     path("respond/<uuid:token>/", views.respond_to_assignment, name="respond_to_assignment"),
     path("dashboard/", views.dashboard, name="dashboard"),
     path("dashboard/week/<int:pk>/", views.service_week_detail, name="service_week_detail"),
+    path("dashboard/week/<int:pk>/reorder-items/", views.reorder_service_items, name="reorder_service_items"),
     path("dashboard/week/<int:pk>/item/<int:item_id>/delete/", views.delete_service_item, name="delete_service_item"),
     path(
         "dashboard/week/<int:pk>/assignment/<int:assignment_id>/delete/",
@@ -31,5 +32,5 @@ urlpatterns = [
     path("users/new/", views.user_edit, name="user_add"),
     path("users/<int:pk>/edit/", views.user_edit, name="user_edit"),
     path("users/<int:pk>/delete/", views.user_delete, name="user_delete"),
-    path("logout/", LogoutView.as_view(next_page="/admin/login/?next=/dashboard/"),name="logout"),
+    path("logout/", LogoutView.as_view(next_page="/admin/login/?next=/dashboard/"), name="logout"),
 ]

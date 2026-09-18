@@ -1,10 +1,11 @@
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import get_user_model
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
+import json
 import requests
 
 from .emailing import send_assignment_email
@@ -54,6 +55,7 @@ def service_week_detail(request, pk):
             if item_form.is_valid():
                 item = item_form.save(commit=False)
                 item.service_week = week
+                item.order = week.order_of_service.count()
                 item.save()
                 messages.success(request, f"Added {item.title} to the order of service.")
             return redirect("service_week_detail", pk=pk)
@@ -75,10 +77,11 @@ def service_week_detail(request, pk):
 
     item_form = ServiceItemForm()
 
-    roles_with_eligible = [
-        (role, role.volunteers.filter(active=True).order_by("name"))
-        for role in Role.objects.all().order_by("name")
-    ]
+    roles_with_eligible = []
+    for role in Role.objects.all().order_by("name"):
+        eligible = role.volunteers.filter(active=True).order_by("name")
+        assigned_for_role = [a for a in assignments if a.role_id == role.id]
+        roles_with_eligible.append((role, eligible, assigned_for_role))
 
     return render(
         request,
@@ -91,6 +94,29 @@ def service_week_detail(request, pk):
             "roles_with_eligible": roles_with_eligible,
         },
     )
+
+
+@staff_member_required
+def reorder_service_items(request, pk):
+    if request.method != "POST":
+        return JsonResponse({"error": "POST required"}, status=405)
+
+    week = get_object_or_404(ServiceWeek, pk=pk)
+
+    try:
+        data = json.loads(request.body)
+        item_ids = data.get("order", [])
+    except (ValueError, TypeError):
+        return JsonResponse({"error": "Invalid payload"}, status=400)
+
+    items_by_id = {item.id: item for item in week.order_of_service.all()}
+    for index, item_id in enumerate(item_ids):
+        item = items_by_id.get(int(item_id))
+        if item:
+            item.order = index
+            item.save(update_fields=["order"])
+
+    return JsonResponse({"status": "ok"})
 
 
 @staff_member_required

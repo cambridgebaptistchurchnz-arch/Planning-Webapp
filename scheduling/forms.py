@@ -18,7 +18,7 @@ class ServiceWeekForm(forms.ModelForm):
 class ServiceItemForm(forms.ModelForm):
     class Meta:
         model = ServiceItem
-        fields = ["order", "item_type", "title", "duration_minutes", "notes"]
+        fields = ["item_type", "title", "duration_minutes", "notes"]
 
 
 class AssignmentForm(forms.ModelForm):

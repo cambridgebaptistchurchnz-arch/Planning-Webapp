@@ -10,11 +10,12 @@
 
 <div class="panel">
     <h3>Order of Service</h3>
+    <p class="page-subtitle" style="margin-bottom: 10px;">Drag rows by the handle to reorder.</p>
     {% if items %}
     <table>
         <thead>
             <tr>
-                <th>#</th>
+                <th></th>
                 <th>Type</th>
                 <th>Title</th>
                 <th>Duration</th>
@@ -22,10 +23,10 @@
                 <th></th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="order-of-service-list">
             {% for item in items %}
-            <tr>
-                <td>{{ item.order }}</td>
+            <tr data-item-id="{{ item.pk }}">
+                <td class="drag-handle" title="Drag to reorder">&#9776;</td>
                 <td>{{ item.get_item_type_display }}</td>
                 <td>{{ item.title }}</td>
                 <td>{% if item.duration_minutes %}{{ item.duration_minutes }} min{% endif %}</td>
@@ -47,10 +48,6 @@
     <form method="post" class="inline-form">
         {% csrf_token %}
         <div class="field">
-            <label for="{{ item_form.order.id_for_label }}">Order</label>
-            {{ item_form.order }}
-        </div>
-        <div class="field">
             <label for="{{ item_form.item_type.id_for_label }}">Type</label>
             {{ item_form.item_type }}
         </div>
@@ -66,7 +63,7 @@
             <label for="{{ item_form.notes.id_for_label }}">Notes</label>
             {{ item_form.notes }}
         </div>
-        <button type="submit" name="add_item" class="btn-primary">Add Item</button>
+        <button type="submit" name="add_item" class="btn-primary">Add Item (goes to end of list)</button>
     </form>
 </div>
 
@@ -112,29 +109,68 @@
 
     <h3 style="margin-top: 28px;">Assign a Volunteer</h3>
     {% if roles_with_eligible %}
-        {% for role, eligible in roles_with_eligible %}
-        <form method="post" class="inline-form">
-            {% csrf_token %}
-            <input type="hidden" name="role_id" value="{{ role.pk }}">
-            <div class="field">
-                <label>{{ role.name }}</label>
+        {% for role, eligible, assigned_for_role in roles_with_eligible %}
+        <div class="assign-row">
+            <div class="assign-row-label">
+                <strong>{{ role.name }}</strong>
+                {% if assigned_for_role %}
+                    <span class="page-subtitle" style="margin: 0;">
+                        {% for a in assigned_for_role %}{{ a.volunteer.name }}{% if not forloop.last %}, {% endif %}{% endfor %}
+                    </span>
+                {% endif %}
+            </div>
+
+            {% if assigned_for_role %}
+            <div class="assign-row-actions" id="assigned-state-{{ role.pk }}">
+                <button type="button" class="btn-secondary btn-small" disabled>Assigned</button>
+                <button type="button" class="btn-secondary btn-small" onclick="document.getElementById('assign-form-{{ role.pk }}').style.display='flex'; document.getElementById('assigned-state-{{ role.pk }}').style.display='none';">Edit</button>
+            </div>
+            {% endif %}
+
+            <form method="post" class="inline-form assign-row-form" id="assign-form-{{ role.pk }}" style="{% if assigned_for_role %}display:none;{% endif %} margin-top: 0;">
+                {% csrf_token %}
+                <input type="hidden" name="role_id" value="{{ role.pk }}">
                 {% if eligible %}
                 <select name="volunteer_id">
                     {% for v in eligible %}
                     <option value="{{ v.pk }}">{{ v.name }}</option>
                     {% endfor %}
                 </select>
+                <button type="submit" name="assign_volunteer" class="btn-primary btn-small">Assign</button>
                 {% else %}
                 <span class="empty">No eligible volunteers set up yet</span>
                 {% endif %}
-            </div>
-            {% if eligible %}
-            <button type="submit" name="assign_volunteer" class="btn-primary btn-small">Assign</button>
-            {% endif %}
-        </form>
+            </form>
+        </div>
         {% endfor %}
     {% else %}
         <p class="empty">No roles set up yet — add some on the Roles page first.</p>
     {% endif %}
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.2/Sortable.min.js"></script>
+<script>
+    var listEl = document.getElementById('order-of-service-list');
+    if (listEl) {
+        Sortable.create(listEl, {
+            handle: '.drag-handle',
+            animation: 150,
+            onEnd: function () {
+                var ids = Array.prototype.map.call(
+                    listEl.querySelectorAll('tr'),
+                    function (row) { return row.getAttribute('data-item-id'); }
+                );
+                var csrfToken = document.querySelector('input[name=csrfmiddlewaretoken]').value;
+                fetch("{% url 'reorder_service_items' week.pk %}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken
+                    },
+                    body: JSON.stringify({order: ids})
+                });
+            }
+        });
+    }
+</script>
 {% endblock %}
