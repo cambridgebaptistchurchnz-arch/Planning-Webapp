@@ -1,0 +1,146 @@
+{% extends "admin/login.html" %}
+{% load i18n %}
+
+{% block extrastyle %}
+{{ block.super }}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --ink: #26344A;
+        --paper: #FBF8F3;
+        --panel: #FFFFFF;
+        --gold: #B8862F;
+        --gold-dark: #966D26;
+        --clay: #A8402F;
+        --clay-bg: #F7E9E6;
+        --line: #E4DED2;
+        --text: #2A2A28;
+        --text-quiet: #8A8272;
+    }
+
+    /* Hide all of Django admin's own chrome for a clean full-page login */
+    #header, div.breadcrumbs, #footer { display: none !important; }
+
+    body.login {
+        font-family: 'Inter', -apple-system, sans-serif;
+        background: var(--paper);
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        margin: 0;
+    }
+
+    #content {
+        padding: 0;
+    }
+
+    .church-login-card {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 40px 36px;
+        width: 100%;
+        max-width: 360px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .church-login-card h1 {
+        font-family: 'Fraunces', serif;
+        font-weight: 700;
+        font-size: 1.6rem;
+        margin: 0 0 4px 0;
+        color: var(--ink);
+    }
+
+    .church-login-card .subtitle {
+        color: var(--text-quiet);
+        margin: 0 0 24px 0;
+        font-size: 0.92rem;
+    }
+
+    .church-login-card .field {
+        margin-bottom: 16px;
+    }
+
+    .church-login-card label {
+        display: block;
+        font-size: 0.82rem;
+        color: var(--text-quiet);
+        margin-bottom: 6px;
+    }
+
+    .church-login-card input[type="text"],
+    .church-login-card input[type="password"] {
+        width: 100%;
+        font-family: 'Inter', sans-serif;
+        border: 1px solid var(--line);
+        border-radius: 5px;
+        padding: 10px 12px;
+        font-size: 0.95rem;
+    }
+
+    .church-login-card button {
+        width: 100%;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.95rem;
+        font-weight: 500;
+        padding: 11px 18px;
+        border-radius: 5px;
+        border: none;
+        background: var(--gold);
+        color: #fff;
+        cursor: pointer;
+        margin-top: 6px;
+    }
+
+    .church-login-card button:hover {
+        background: var(--gold-dark);
+    }
+
+    .login-error {
+        background: var(--clay-bg);
+        color: var(--clay);
+        padding: 10px 14px;
+        border-radius: 5px;
+        font-size: 0.88rem;
+        margin-bottom: 16px;
+    }
+</style>
+{% endblock %}
+
+{% block bodyclass %}{{ block.super }} church-login{% endblock %}
+
+{% block branding %}{% endblock %}
+{% block usertools %}{% endblock %}
+{% block nav-global %}{% endblock %}
+
+{% block content %}
+<div class="church-login-card">
+    <h1>Church Roster</h1>
+    <p class="subtitle">Sign in to manage the schedule</p>
+
+    {% if form.non_field_errors %}
+        {% for error in form.non_field_errors %}
+            <p class="login-error">{{ error }}</p>
+        {% endfor %}
+    {% endif %}
+
+    <form action="{{ app_path }}" method="post" id="login-form">
+        {% csrf_token %}
+        <div class="field">
+            <label for="id_username">{% translate 'Username' %}</label>
+            {{ form.username }}
+        </div>
+        <div class="field">
+            <label for="id_password">{% translate 'Password' %}</label>
+            {{ form.password }}
+        </div>
+        <input type="hidden" name="next" value="{{ next }}">
+        <button type="submit">{% translate 'Log in' %}</button>
+    </form>
+</div>
+{% endblock %}
