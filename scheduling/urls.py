@@ -7,6 +7,7 @@ urlpatterns = [
     path("respond/<uuid:token>/", views.respond_to_assignment, name="respond_to_assignment"),
     path("dashboard/", views.dashboard, name="dashboard"),
     path("dashboard/week/<int:pk>/", views.service_week_detail, name="service_week_detail"),
+    path("dashboard/week/<int:pk>/delete/", views.delete_service_week, name="delete_service_week"),
     path("dashboard/week/<int:pk>/reorder-items/", views.reorder_service_items, name="reorder_service_items"),
     path("dashboard/week/<int:pk>/item/<int:item_id>/delete/", views.delete_service_item, name="delete_service_item"),
     path(

@@ -41,7 +41,12 @@
             <tr>
                 <td>{{ week.date }}</td>
                 <td>{{ week.label|default:"—" }}</td>
-                <td><a href="{% url 'service_week_detail' week.pk %}" class="btn btn-secondary btn-small">Open</a></td>
+                <td><a href="{% url 'service_week_detail' week.pk %}" class="btn btn-secondary btn-small">Open</a>
+                    <form method="post" action="{% url 'delete_service_week' week.pk %}" style="display:inline;" onsubmit="return confirm('Remove {{ week }}? This also deletes its order of service and assignments.');">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-danger">Delete</button>
+                    </form>
+                </td>
             </tr>
             {% endfor %}
         </tbody>

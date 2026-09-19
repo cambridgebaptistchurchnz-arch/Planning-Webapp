@@ -90,6 +90,15 @@ def dashboard(request):
 
 
 @staff_member_required
+def delete_service_week(request, pk):
+    week = get_object_or_404(ServiceWeek, pk=pk)
+    week_label = str(week)
+    week.delete()
+    messages.success(request, f"Removed {week_label} and everything scheduled for it.")
+    return redirect("dashboard")
+
+
+@staff_member_required
 def service_week_detail(request, pk):
     week = get_object_or_404(ServiceWeek, pk=pk)
 

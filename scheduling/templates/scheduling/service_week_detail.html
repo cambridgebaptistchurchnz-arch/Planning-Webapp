@@ -6,6 +6,11 @@
     <a href="{% url 'dashboard' %}">&larr; All weeks</a>
     &nbsp;·&nbsp;
     <a href="/admin/scheduling/serviceweek/{{ week.pk }}/print/" target="_blank">Print run sheet</a>
+    &nbsp;·&nbsp;
+    <form method="post" action="{% url 'delete_service_week' week.pk %}" style="display:inline;" onsubmit="return confirm('Remove {{ week }}? This also deletes its order of service and assignments.');">
+        {% csrf_token %}
+        <button type="submit" class="btn-danger" style="font-size: 0.85rem;">Delete this week</button>
+    </form>
 </p>
 
 <div class="panel">
