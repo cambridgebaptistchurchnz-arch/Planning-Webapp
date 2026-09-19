@@ -1,64 +1,37 @@
-from django import forms
-from django.contrib.auth import get_user_model
+{% extends "scheduling/dashboard_base.html" %}
 
-from .models import Assignment, EmailTemplate, Role, ServiceItem, ServiceWeek, Volunteer
+{% block content %}
+<h2>Email Template</h2>
+<p class="page-subtitle">This is what volunteers receive when you email them an assignment.</p>
 
-User = get_user_model()
+<div class="panel">
+    <h3>Available placeholders</h3>
+    <p style="font-size: 0.9rem; color: var(--text-quiet); margin-bottom: 0;">
+        Use these anywhere in the subject or message. They'll be swapped in automatically for each person:
+    </p>
+    <ul style="font-size: 0.9rem; color: var(--text-quiet);">
+        <li><code>{volunteer_name}</code> — the volunteer's name</li>
+        <li><code>{role}</code> — the role they're being asked to serve</li>
+        <li><code>{service_week}</code> — the date/label of the service week</li>
+    </ul>
+</div>
 
-
-class ServiceWeekForm(forms.ModelForm):
-    class Meta:
-        model = ServiceWeek
-        fields = ["date", "label"]
-        widgets = {
-            "date": forms.DateInput(attrs={"type": "date"}),
-        }
-
-
-class ServiceItemForm(forms.ModelForm):
-    class Meta:
-        model = ServiceItem
-        fields = ["item_type", "title", "duration_minutes", "notes"]
-
-
-class AssignmentForm(forms.ModelForm):
-    class Meta:
-        model = Assignment
-        fields = ["role", "volunteer"]
-
-
-class VolunteerForm(forms.ModelForm):
-    class Meta:
-        model = Volunteer
-        fields = ["name", "email", "phone", "active", "roles"]
-        widgets = {
-            "roles": forms.CheckboxSelectMultiple,
-        }
-
-
-class RoleForm(forms.ModelForm):
-    class Meta:
-        model = Role
-        fields = ["name", "description"]
-
-
-class StaffUserForm(forms.ModelForm):
-    password = forms.CharField(
-        widget=forms.PasswordInput,
-        required=False,
-        help_text="Leave blank to keep the current password. Required when creating a new login.",
-    )
-
-    class Meta:
-        model = User
-        fields = ["username", "email", "is_staff", "is_active"]
-
-
-class EmailTemplateForm(forms.ModelForm):
-    class Meta:
-        model = EmailTemplate
-        fields = ["subject", "body"]
-        widgets = {
-            "subject": forms.TextInput(attrs={"style": "width: 100%; max-width: 600px;"}),
-            "body": forms.Textarea(attrs={"rows": 8, "style": "width: 100%; max-width: 600px;"}),
-        }
+<div class="panel">
+    <form method="post">
+        {% csrf_token %}
+        <div class="field" style="margin-bottom: 14px;">
+            <label>Subject line</label><br>
+            {{ form.subject }}
+            {% if form.subject.errors %}<p style="color: var(--clay); font-size: 0.85rem;">{{ form.subject.errors|join:", " }}</p>{% endif %}
+        </div>
+        <div class="field" style="margin-bottom: 18px;">
+            <label>Message</label><br>
+            {{ form.body }}
+            <p style="font-size: 0.82rem; color: var(--text-quiet); margin-top: 4px;">
+                The confirm/decline button is added automatically below your message
+            </p>
+        </div>
+        <button type="submit" class="btn-primary">Save</button>
+    </form>
+</div>
+{% endblock %}
