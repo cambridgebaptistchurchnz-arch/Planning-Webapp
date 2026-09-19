@@ -1,12 +1,7 @@
-Hi {{ assignment.volunteer.name }},
-
-You've been scheduled for the following:
+{{ custom_body }}
 
 Role: {{ assignment.role }}
 Date: {{ assignment.service_week }}
 
-Please confirm whether you're able to serve by clicking the link below:
-
+Confirm here:
 {{ respond_url }}
-
-

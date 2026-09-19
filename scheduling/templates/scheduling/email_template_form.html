@@ -1,0 +1,38 @@
+{% extends "scheduling/dashboard_base.html" %}
+
+{% block content %}
+<h2>Email Template</h2>
+<p class="page-subtitle">This is what volunteers receive when you email them an assignment.</p>
+
+<div class="panel">
+    <h3>Available placeholders</h3>
+    <p style="font-size: 0.9rem; color: var(--text-quiet); margin-bottom: 0;">
+        Use these anywhere in the subject or message — they'll be swapped in automatically for each person:
+    </p>
+    <ul style="font-size: 0.9rem; color: var(--text-quiet);">
+        <li><code>{volunteer_name}</code> — the volunteer's name</li>
+        <li><code>{role}</code> — the role they're being asked to serve</li>
+        <li><code>{service_week}</code> — the date/label of the service week</li>
+        <li><code>{respond_url}</code> — their personal confirm/decline link</li>
+    </ul>
+</div>
+
+<div class="panel">
+    <form method="post">
+        {% csrf_token %}
+        <div class="field" style="margin-bottom: 14px;">
+            <label>Subject line</label><br>
+            {{ form.subject }}
+            {% if form.subject.errors %}<p style="color: var(--clay); font-size: 0.85rem;">{{ form.subject.errors|join:", " }}</p>{% endif %}
+        </div>
+        <div class="field" style="margin-bottom: 18px;">
+            <label>Message</label><br>
+            {{ form.body }}
+            <p style="font-size: 0.82rem; color: var(--text-quiet); margin-top: 4px;">
+                The confirm/decline button is added automatically below your message — no need to mention the link itself unless you want to.
+            </p>
+        </div>
+        <button type="submit" class="btn-primary">Save</button>
+    </form>
+</div>
+{% endblock %}

@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth import get_user_model
 
-from .models import Assignment, Role, ServiceItem, ServiceWeek, Volunteer
+from .models import Assignment, EmailTemplate, Role, ServiceItem, ServiceWeek, Volunteer
 
 User = get_user_model()
 
@@ -52,3 +52,12 @@ class StaffUserForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ["username", "email", "is_staff", "is_active"]
+
+
+class EmailTemplateForm(forms.ModelForm):
+    class Meta:
+        model = EmailTemplate
+        fields = ["subject", "body"]
+        widgets = {
+            "body": forms.Textarea(attrs={"rows": 8}),
+        }

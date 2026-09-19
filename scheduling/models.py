@@ -105,3 +105,30 @@ class ServiceItem(models.Model):
 
     def __str__(self):
         return f"{self.get_item_type_display()}: {self.title}"
+
+
+class EmailTemplate(models.Model):
+    """A single editable template used for every assignment notification email.
+    We only ever use one row (the first one) - see get_solo()."""
+
+    subject = models.CharField(
+        max_length=200,
+        default="Can you serve on {role} - {service_week}?",
+        help_text="Placeholders: {volunteer_name} {role} {service_week} {respond_url}",
+    )
+    body = models.TextField(
+        default=(
+            "Hi {volunteer_name},\n\n"
+            "You've been scheduled to serve as {role} on {service_week}. "
+            "Please confirm whether you're able to make it using the button below."
+        ),
+        help_text="Placeholders: {volunteer_name} {role} {service_week} {respond_url}",
+    )
+
+    def __str__(self):
+        return "Assignment email template"
+
+    @classmethod
+    def get_solo(cls):
+        obj, _ = cls.objects.get_or_create(pk=1)
+        return obj

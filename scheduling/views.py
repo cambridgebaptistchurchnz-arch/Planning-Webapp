@@ -9,8 +9,8 @@ import json
 import requests
 
 from .emailing import send_assignment_email
-from .forms import RoleForm, ServiceItemForm, ServiceWeekForm, StaffUserForm, VolunteerForm
-from .models import Assignment, Role, ServiceWeek, Volunteer
+from .forms import EmailTemplateForm, RoleForm, ServiceItemForm, ServiceWeekForm, StaffUserForm, VolunteerForm
+from .models import Assignment, EmailTemplate, Role, ServiceWeek, Volunteer
 
 User = get_user_model()
 
@@ -318,3 +318,19 @@ def user_delete(request, pk):
     staff_user.delete()
     messages.success(request, "Removed login.")
     return redirect("user_list")
+
+
+@staff_member_required
+def email_template_edit(request):
+    template = EmailTemplate.get_solo()
+
+    if request.method == "POST":
+        form = EmailTemplateForm(request.POST, instance=template)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Saved email template.")
+            return redirect("email_template_edit")
+    else:
+        form = EmailTemplateForm(instance=template)
+
+    return render(request, "scheduling/email_template_form.html", {"form": form})

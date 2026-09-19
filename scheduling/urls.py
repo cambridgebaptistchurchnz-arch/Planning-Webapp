@@ -32,5 +32,6 @@ urlpatterns = [
     path("users/new/", views.user_edit, name="user_add"),
     path("users/<int:pk>/edit/", views.user_edit, name="user_edit"),
     path("users/<int:pk>/delete/", views.user_delete, name="user_delete"),
+    path("email-template/", views.email_template_edit, name="email_template_edit"),
     path("logout/", LogoutView.as_view(next_page="/admin/login/?next=/dashboard/"), name="logout"),
 ]

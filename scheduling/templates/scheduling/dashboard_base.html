@@ -319,6 +319,7 @@
             <a href="{% url 'dashboard' %}" class="{% block nav_dashboard %}{% endblock %}">Service Weeks</a>
             <a href="{% url 'volunteer_list' %}" class="{% block nav_volunteers %}{% endblock %}">Volunteers</a>
             <a href="{% url 'role_list' %}" class="{% block nav_roles %}{% endblock %}">Roles</a>
+            <a href="{% url 'email_template_edit' %}" class="{% block nav_email_template %}{% endblock %}">Email Template</a>
             {% if user.is_superuser %}
             <a href="{% url 'user_list' %}" class="{% block nav_users %}{% endblock %}">Logins</a>
             {% endif %}
