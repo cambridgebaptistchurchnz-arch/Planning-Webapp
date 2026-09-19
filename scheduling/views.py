@@ -81,7 +81,7 @@ def dashboard(request):
         if form.is_valid():
             week = form.save()
             messages.success(request, f"Created {week}.")
-            return redirect("service_week_detail", pk=week.pk)
+            return redirect(reverse("service_week_detail", args=[pk]) + "#assign-section")
     else:
         form = ServiceWeekForm()
 
