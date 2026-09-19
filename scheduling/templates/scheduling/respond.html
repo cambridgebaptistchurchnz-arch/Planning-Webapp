@@ -115,6 +115,43 @@
             color: #55503F;
             margin-bottom: 20px;
         }
+
+        .swap-section {
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid var(--line);
+        }
+
+        .swap-section p {
+            font-size: 0.9rem;
+            color: #55503F;
+            margin: 0 0 10px 0;
+        }
+
+        .swap-section select {
+            width: 100%;
+            font-family: 'Inter', sans-serif;
+            border: 1px solid var(--line);
+            border-radius: 3px;
+            padding: 10px 12px;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+
+        button.swap {
+            background: transparent;
+            color: var(--gold);
+            border-color: var(--gold);
+        }
+
+        .swap-message {
+            background: #EAF1EC;
+            color: var(--sage);
+            padding: 10px 14px;
+            border-radius: 4px;
+            font-size: 0.88rem;
+            margin-bottom: 16px;
+        }
     </style>
 </head>
 <body>
@@ -123,23 +160,41 @@
         <h1>{{ assignment.role }}</h1>
         <div class="rule"></div>
 
+        {% if swap_message %}
+            <p class="swap-message">{{ swap_message }}</p>
+        {% endif %}
+
         <p class="status-line">
             Status:
             <span class="status-word {{ assignment.status }}">{{ assignment.get_status_display }}</span>
+            {% if assignment.covered_by %}
+                <br><span style="font-size: 0.85rem; color: #55503F;">Covering: {{ assignment.covered_by.name }}</span>
+            {% endif %}
         </p>
 
         {% if assignment.status == "pending" %}
-            <p class="prompt">You have been placed on the schedule for the following dates. To respond or simply view this schedule, click the appropriate button below.
-
-Thanks,
-
-Gillian Meier
-Cambridge Baptist Church</p>
+            <p class="prompt">Are you able to serve this week?</p>
             <form method="post" class="buttons">
                 {% csrf_token %}
                 <button type="submit" name="action" value="approve" class="approve">Yes, I'll be there</button>
                 <button type="submit" name="action" value="decline" class="decline">Sorry, can't make it</button>
             </form>
+
+            {% if swap_candidates %}
+            <div class="swap-section">
+                <p>Already arranged someone to cover you instead?</p>
+                <form method="post">
+                    {% csrf_token %}
+                    <select name="covering_volunteer_id" required>
+                        <option value="">Select who's covering…</option>
+                        {% for candidate in swap_candidates %}
+                        <option value="{{ candidate.pk }}">{{ candidate.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <button type="submit" name="action" value="decline_with_swap" class="swap" style="width: 100%;">Request Swap</button>
+                </form>
+            </div>
+            {% endif %}
         {% else %}
             <p class="done-note">Thanks — your response has been recorded. You can close this page.</p>
             <form method="post" class="buttons">

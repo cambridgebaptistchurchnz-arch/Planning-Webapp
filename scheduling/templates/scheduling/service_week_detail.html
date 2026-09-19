@@ -84,7 +84,12 @@
             <tr>
                 <td>{{ assignment.role }}</td>
                 <td>{{ assignment.volunteer.name }}</td>
-                <td><span class="badge {{ assignment.status }}">{{ assignment.get_status_display }}</span></td>
+                <td>
+                    <span class="badge {{ assignment.status }}">{{ assignment.get_status_display }}</span>
+                    {% if assignment.covered_by %}
+                        <br><span class="page-subtitle" style="margin: 2px 0 0 0; font-size: 0.78rem;">Covering: {{ assignment.covered_by.name }}</span>
+                    {% endif %}
+                </td>
                 <td>
                     <form method="post" action="{% url 'email_assignment' week.pk assignment.pk %}" style="display:inline;">
                         {% csrf_token %}

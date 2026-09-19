@@ -18,16 +18,60 @@ User = get_user_model()
 def respond_to_assignment(request, token):
     assignment = get_object_or_404(Assignment, token=token)
 
+    swap_candidates = (
+        Volunteer.objects.filter(roles=assignment.role, active=True)
+        .exclude(pk=assignment.volunteer_id)
+        .order_by("name")
+    )
+    swap_message = None
+
     if request.method == "POST":
         action = request.POST.get("action")
+
         if action in ("approve", "decline"):
             assignment.status = (
                 Assignment.Status.APPROVED if action == "approve" else Assignment.Status.DECLINED
             )
             assignment.responded_at = timezone.now()
-            assignment.save(update_fields=["status", "responded_at"])
+            assignment.covered_by = None
+            assignment.save(update_fields=["status", "responded_at", "covered_by"])
 
-    return render(request, "scheduling/respond.html", {"assignment": assignment})
+        elif action == "decline_with_swap":
+            covering_volunteer = swap_candidates.filter(pk=request.POST.get("covering_volunteer_id")).first()
+            if covering_volunteer:
+                assignment.status = Assignment.Status.DECLINED
+                assignment.responded_at = timezone.now()
+                assignment.covered_by = covering_volunteer
+                assignment.save(update_fields=["status", "responded_at", "covered_by"])
+
+                new_assignment, created = Assignment.objects.get_or_create(
+                    service_week=assignment.service_week,
+                    role=assignment.role,
+                    volunteer=covering_volunteer,
+                )
+                if created:
+                    try:
+                        send_assignment_email(new_assignment)
+                        swap_message = f"Thanks — we've emailed {covering_volunteer.name} to confirm."
+                    except Exception:  # noqa: BLE001
+                        swap_message = (
+                            f"Recorded the swap, but couldn't email {covering_volunteer.name} "
+                            "automatically — please let them know directly."
+                        )
+                else:
+                    swap_message = f"{covering_volunteer.name} is already scheduled for this role this week."
+            else:
+                swap_message = "Please choose someone from the list."
+
+    return render(
+        request,
+        "scheduling/respond.html",
+        {
+            "assignment": assignment,
+            "swap_candidates": swap_candidates,
+            "swap_message": swap_message,
+        },
+    )
 
 
 @staff_member_required

@@ -65,6 +65,14 @@ class Assignment(models.Model):
     token = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
     notified_at = models.DateTimeField(null=True, blank=True)
     responded_at = models.DateTimeField(null=True, blank=True)
+    covered_by = models.ForeignKey(
+        Volunteer,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="covering_for",
+        help_text="If declined, who has agreed to cover this instead.",
+    )
 
     class Meta:
         ordering = ["service_week", "role", "volunteer"]
