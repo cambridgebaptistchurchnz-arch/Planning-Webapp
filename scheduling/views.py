@@ -81,7 +81,7 @@ def dashboard(request):
         if form.is_valid():
             week = form.save()
             messages.success(request, f"Created {week}.")
-            return redirect(reverse("service_week_detail", args=[pk]) + "#assign-section")
+            return redirect("service_week_detail", pk=week.pk)
     else:
         form = ServiceWeekForm()
 
@@ -123,7 +123,7 @@ def service_week_detail(request, pk):
                 messages.success(request, f"Assigned {volunteer} to {role}.")
             else:
                 messages.info(request, f"{volunteer} is already assigned to {role} this week.")
-            return redirect("service_week_detail", pk=pk)
+            return redirect(reverse("service_week_detail", args=[pk]) + "#assign-section")
 
     items = week.order_of_service.all().order_by("order")
     assignments = week.assignments.select_related("role", "volunteer").order_by("role__name")
