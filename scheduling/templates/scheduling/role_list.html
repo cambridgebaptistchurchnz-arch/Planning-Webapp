@@ -3,10 +3,13 @@
 {% block nav_roles %}active{% endblock %}
 
 {% block content %}
-<h2>Roles</h2>
-<p class="page-subtitle">
-    The jobs volunteers get scheduled for. <a href="{% url 'role_add' %}">+ Add a role</a>
-</p>
+<div class="page-header">
+    <div>
+        <h2>Roles</h2>
+        <p class="page-subtitle">The jobs volunteers get scheduled for.</p>
+    </div>
+    <a href="{% url 'role_add' %}" class="btn btn-primary">+ Add a role</a>
+</div>
 
 <div class="panel">
     {% if roles %}

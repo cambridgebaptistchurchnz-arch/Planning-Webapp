@@ -3,10 +3,13 @@
 {% block nav_volunteers %}active{% endblock %}
 
 {% block content %}
-<h2>Volunteers</h2>
-<p class="page-subtitle">
-    Everyone available to serve. <a href="{% url 'volunteer_add' %}">+ Add a volunteer</a>
-</p>
+<div class="page-header">
+    <div>
+        <h2>Volunteers</h2>
+        <p class="page-subtitle">Everyone available to serve.</p>
+    </div>
+    <a href="{% url 'volunteer_add' %}" class="btn btn-primary">+ Add a volunteer</a>
+</div>
 
 <div class="panel">
     {% if volunteers %}

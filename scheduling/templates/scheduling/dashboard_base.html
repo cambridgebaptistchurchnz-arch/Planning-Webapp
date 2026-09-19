@@ -50,11 +50,11 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-	position: sticky;
-	top: 0;
-	height: 100vh;
-	align-self: flex-start;
-	overflow-y: auto;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            align-self: flex-start;
+            overflow-y: auto;
         }
 
         .sidebar h1 {
@@ -121,6 +121,26 @@
         .page-subtitle {
             color: var(--text-quiet);
             margin: 0 0 28px 0;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .page-header h2 {
+            margin-bottom: 6px;
+        }
+
+        .page-header .page-subtitle {
+            margin: 0;
+        }
+
+        .page-header .btn-primary {
+            flex-shrink: 0;
         }
 
         /* ---------- Cards / panels ---------- */
@@ -220,6 +240,7 @@
             border: none;
             cursor: pointer;
             display: inline-block;
+            text-decoration: none;
         }
 
         .btn-primary { background: var(--gold); color: #fff; }
