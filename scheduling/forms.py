@@ -59,5 +59,6 @@ class EmailTemplateForm(forms.ModelForm):
         model = EmailTemplate
         fields = ["subject", "body"]
         widgets = {
-            "body": forms.Textarea(attrs={"rows": 8}),
+            "subject": forms.TextInput(attrs={"style": "width: 100%; max-width: 600px;"}),
+            "body": forms.Textarea(attrs={"rows": 8, "style": "width: 100%; max-width: 600px;"}),
         }
